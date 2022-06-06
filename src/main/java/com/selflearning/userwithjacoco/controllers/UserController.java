@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/")
     public Response getUsers(){
         //return new ResponseEntity<List<User>>(userService.getUsers(), HttpStatus.OK);
-        List<User> users =  userService.getUsers();
+        List<User> users = userService.getUsers();
         return new Response("Record Count : " + users.size(), Boolean.TRUE);
     }
 
@@ -33,9 +33,10 @@ public class UserController {
     }
 
     @GetMapping("/getbyaddress/{address}")
-    public List<User> getUsersByAddress(@PathVariable String address){
+    public Response getUsersByAddress(@PathVariable String address){
         //return new ResponseEntity<List<User>>(userService.getUsersByAddress(address), HttpStatus.OK);
-        return userService.getUsersByAddress(address);
+        List<User> users = userService.getUsersByAddress(address);
+        return new Response("Record Count : " + users.size(), Boolean.TRUE);
     }
 
     @DeleteMapping("/remove")

@@ -3,8 +3,8 @@ package com.selflearning.userwithjacoco;
 import com.selflearning.userwithjacoco.entities.User;
 import com.selflearning.userwithjacoco.repositories.UserRepository;
 import com.selflearning.userwithjacoco.services.UserService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,11 +16,21 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+@SpringBootTest(classes = UserwithjacocoApplication.class)
 public class UserwithjacocoApplicationTests {
 
-	@Autowired
+    @Test
+    void userwithjacocoApplicationTest(){
+        String[] args=
+                new String[] {
+                        "test", "test"
+                };
+        UserwithjacocoApplication.main(args);
+        Assertions.assertNotNull(args);
+    }
+
+	/*@Autowired
 	private UserService userService;
 
 	@MockBean
@@ -56,7 +66,7 @@ public class UserwithjacocoApplicationTests {
 	}
 	@Test
 	public void contextLoads() {
-	}
+	}*/
 
 
 }
