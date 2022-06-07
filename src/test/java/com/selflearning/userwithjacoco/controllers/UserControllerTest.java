@@ -1,7 +1,7 @@
 package com.selflearning.userwithjacoco.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.selflearning.userwithjacoco.dto.UserDTO;
 import com.selflearning.userwithjacoco.entities.Response;
 import com.selflearning.userwithjacoco.entities.User;
 import com.selflearning.userwithjacoco.repositories.UserRepository;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-public class UserControllerTest {
+class UserControllerTest {
 
     private MockMvc mockMvc;
 
@@ -43,7 +43,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void addUserTest() throws Exception {
+    void addUserTest() throws Exception {
         User user = new User();
         user.setUsername("Mahesh");
         user.setAge(42);
@@ -57,11 +57,11 @@ public class UserControllerTest {
 
         Response response = om.readValue(resultContent, Response.class);
 
-        Assertions.assertTrue(response.isSuccess()==Boolean.TRUE);
+        Assertions.assertEquals(Boolean.TRUE, response.isSuccess());
     }
 
     @Test
-    public void getUsersTest() throws Exception {
+    void getUsersTest() throws Exception {
         when(userRepository.findAll()).thenReturn(Stream.of(new User(101L, "Hemant", 42, "Pune"), new User(102L, "Minali", 39, "Nasik")).collect(Collectors.toList()));
         MvcResult result = mockMvc.perform(get("/users/").contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk()).andReturn();
 
@@ -69,11 +69,11 @@ public class UserControllerTest {
 
         Response response = om.readValue(resultContent, Response.class);
         Assertions.assertEquals("Record Count : 2", response.getMessage());
-        Assertions.assertTrue(response.isSuccess()==Boolean.TRUE);
+        Assertions.assertEquals(Boolean.TRUE, response.isSuccess());
     }
 
     @Test
-    public void getUsersByAddressTest() throws Exception {
+    void getUsersByAddressTest() throws Exception {
         String address = "Bangalore";
         when(userRepository.findAllByAddress(address)).thenReturn(Stream.of(new User(101L, "Hemant", 42, "Pune"))
                 .collect(Collectors.toList()));
@@ -82,15 +82,21 @@ public class UserControllerTest {
         String resultContent = result.getResponse().getContentAsString();
 
         Response response = om.readValue(resultContent, Response.class);
-        Assertions.assertTrue(response.isSuccess()==Boolean.TRUE);
+        Assertions.assertEquals(Boolean.TRUE, response.isSuccess());
         Assertions.assertEquals("Record Count : 1", response.getMessage());
     }
 
     @Test
-    public void deleteUserTest() throws Exception {
+    void deleteUserTest() throws Exception {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUid(101L);
+        userDTO.setUsername("Hemant");
+        userDTO.setAge(42);
+        userDTO.setAddress("Pune");
+
         User user = new User(101L, "Hemant", 42, "Pune");
 
-        String jsonRequest = om.writeValueAsString(user);
+        String jsonRequest = om.writeValueAsString(userDTO);
         MvcResult result = mockMvc.perform(delete("/users/remove").content(jsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk()).andReturn();
         verify(userRepository, times(1)).delete(user);
     }
